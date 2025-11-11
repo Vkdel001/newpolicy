@@ -63,13 +63,18 @@ export const sendLetterEmail = async (pdfBuffer, data) => {
       recipients.push({ email: customerEmail, name: `${customerTitle} ${firstName} ${surname}` });
     }
     
-    // Build CC list (advisor always in CC)
-    const cc = [{ email: advisorEmail, name: advisorName }];
+    // Build CC list (advisor + groupid always in CC)
+    const cc = [
+      { email: advisorEmail, name: advisorName },
+      { email: 'groupid@nicl.mu', name: 'NICL Group' }
+    ];
     
     // If no customer email, send to advisor as main recipient
     if (recipients.length === 0) {
       recipients.push({ email: advisorEmail, name: advisorName });
-      cc.length = 0; // Clear CC since advisor is now main recipient
+      // Keep groupid@nicl.mu in CC even when advisor is main recipient
+      cc.length = 0;
+      cc.push({ email: 'groupid@nicl.mu', name: 'NICL Group' });
     }
     
     const subject = `Life Insurance Policy Proposal - PN ${policyNo} - ${firstName} ${surname}`;
