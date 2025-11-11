@@ -17,6 +17,21 @@ const SIGNATURE_MAP = {
     file: 'signature_bhoomika.png',
     name: 'Bhoomika Sobran',
     title: 'Team Leader - Life Underwriting'
+  },
+  'ldhoonah@nicl.mu': {
+    file: 'signature_ameetoo.png',
+    name: 'Ameetoo',
+    title: 'Team Leader - Life Underwriting'
+  },
+  'dguzadhur@nicl.mu': {
+    file: 'signature_ameetoo.png',
+    name: 'Ameetoo',
+    title: 'Team Leader - Life Underwriting'
+  },
+  'aahamudally@nicl.mu': {
+    file: 'signature_bhoomika.png',
+    name: 'Bhoomika Sobran',
+    title: 'Team Leader - Life Underwriting'
   }
 };
 

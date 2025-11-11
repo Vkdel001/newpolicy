@@ -7,7 +7,10 @@ const router = express.Router();
 const AUTHORIZED_USERS = [
   'vikas.khanna@zwennpay.com',
   'ameetoo@nicl.mu',
-  'bsobran@nicl.mu'
+  'bsobran@nicl.mu',
+  'ldhoonah@nicl.mu',
+  'dguzadhur@nicl.mu',
+  'aahamudally@nicl.mu'
 ];
 
 const PASSWORD = 'NICL@2025';
