@@ -1,6 +1,8 @@
 import express from 'express';
 import jwt from 'jsonwebtoken';
-import { generatePDF } from '../services/pdfService.js';
+import { generatePDF as generatePDFV1 } from '../services/pdfService.js';
+import { generatePDF as generatePDFV2 } from '../services/pdfServiceVer2.js';
+import { generatePDF as generatePDFV3 } from '../services/pdfServiceVer3.js';
 import { sendLetterEmail } from '../services/brevoService.js';
 
 const router = express.Router();
@@ -26,7 +28,7 @@ const authenticateToken = (req, res, next) => {
 // Generate PDF
 router.post('/generate', authenticateToken, async (req, res) => {
   try {
-    const { letterType, data } = req.body;
+    const { letterType, data, layoutVersion } = req.body;
 
     if (!letterType || !data) {
       return res.status(400).json({ error: 'Letter type and data are required' });
@@ -37,13 +39,32 @@ router.post('/generate', authenticateToken, async (req, res) => {
       advisorName: data.advisorName,
       advisorEmail: data.advisorEmail,
       signerName: data.signerName,
-      signerTitle: data.signerTitle
+      signerTitle: data.signerTitle,
+      layoutVersion: layoutVersion || 'v1'
     });
+
+    // Select PDF generator based on version
+    let generatePDF;
+    switch (layoutVersion) {
+      case 'v2':
+        generatePDF = generatePDFV2;
+        console.log('📄 Using Layout Version 2');
+        break;
+      case 'v3':
+        generatePDF = generatePDFV3;
+        console.log('📄 Using Layout Version 3');
+        break;
+      case 'v1':
+      default:
+        generatePDF = generatePDFV1;
+        console.log('📄 Using Layout Version 1');
+        break;
+    }
 
     const pdfBuffer = await generatePDF(letterType, data);
 
     res.setHeader('Content-Type', 'application/pdf');
-    res.setHeader('Content-Disposition', `attachment; filename=letter_${data.policyNo}.pdf`);
+    res.setHeader('Content-Disposition', `attachment; filename=letter_${data.policyNo}_${layoutVersion || 'v1'}.pdf`);
     res.send(pdfBuffer);
   } catch (error) {
     console.error('Error generating PDF:', error);
@@ -54,7 +75,7 @@ router.post('/generate', authenticateToken, async (req, res) => {
 // Send PDF via Email
 router.post('/send-email', authenticateToken, async (req, res) => {
   try {
-    const { letterType, data } = req.body;
+    const { letterType, data, layoutVersion } = req.body;
 
     if (!letterType || !data) {
       return res.status(400).json({ error: 'Letter type and data are required' });
@@ -63,6 +84,24 @@ router.post('/send-email', authenticateToken, async (req, res) => {
     // Validate required fields
     if (!data.advisorName || !data.advisorEmail) {
       return res.status(400).json({ error: 'Insurance advisor name and email are required' });
+    }
+
+    // Select PDF generator based on version
+    let generatePDF;
+    switch (layoutVersion) {
+      case 'v2':
+        generatePDF = generatePDFV2;
+        console.log('📄 Using Layout Version 2 for email');
+        break;
+      case 'v3':
+        generatePDF = generatePDFV3;
+        console.log('📄 Using Layout Version 3 for email');
+        break;
+      case 'v1':
+      default:
+        generatePDF = generatePDFV1;
+        console.log('📄 Using Layout Version 1 for email');
+        break;
     }
 
     // Generate PDF

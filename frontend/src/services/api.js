@@ -25,14 +25,14 @@ export const authAPI = {
 };
 
 export const pdfAPI = {
-  generatePDF: async (letterType, data) => {
-    const response = await api.post('/pdf/generate', { letterType, data }, {
+  generatePDF: async (letterType, data, layoutVersion = 'v1') => {
+    const response = await api.post('/pdf/generate', { letterType, data, layoutVersion }, {
       responseType: 'blob'
     });
     return response.data;
   },
-  sendEmail: async (letterType, data) => {
-    const response = await api.post('/pdf/send-email', { letterType, data });
+  sendEmail: async (letterType, data, layoutVersion = 'v1') => {
+    const response = await api.post('/pdf/send-email', { letterType, data, layoutVersion });
     return response.data;
   }
 };

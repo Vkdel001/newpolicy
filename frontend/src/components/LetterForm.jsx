@@ -64,6 +64,8 @@ function LetterForm({ format }) {
     }));
   }, []);
 
+  const [layoutVersion, setLayoutVersion] = useState('v1');
+
   const [formData, setFormData] = useState({
     ref: 'BS',
     date: new Date().toLocaleDateString('en-GB', { day: '2-digit', month: 'long', year: 'numeric' }),
@@ -94,7 +96,7 @@ function LetterForm({ format }) {
     signatureFile: 'signature_bhoomika.png',
     // Template texts
     introText: format === 'format1' 
-      ? 'Please refer to your application for life assurance dated {applicationDate} and request for change in reduce premium, we wish to inform you that your life cover has been accepted as per details set below:'
+      ? 'Please refer to your application for life assurance dated {applicationDate}, we wish to inform you that your life cover has been accepted as per details set below:'
       : 'Please refer to your application for life assurance. We wish to inform you that your life cover has been accepted as per details set below:',
     closingText: format === 'format1'
       ? 'We should be grateful if you could confirm your acceptance to the above terms by signing and returning this letter by {returnDate}. After this date we shall conclude that you are agreeable with our terms and subsequently, the policy contract will be issued on Option 2.'
@@ -129,13 +131,13 @@ function LetterForm({ format }) {
     });
 
     try {
-      const pdfBlob = await pdfAPI.generatePDF(format, formData);
+      const pdfBlob = await pdfAPI.generatePDF(format, formData, layoutVersion);
       
       // Create download link
       const url = window.URL.createObjectURL(pdfBlob);
       const link = document.createElement('a');
       link.href = url;
-      link.download = `NICL_Letter_${formData.policyNo}_${Date.now()}.pdf`;
+      link.download = `NICL_Letter_${formData.policyNo}_${layoutVersion}_${Date.now()}.pdf`;
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
@@ -175,7 +177,7 @@ function LetterForm({ format }) {
     // User confirmed, proceed with sending
     setLoading(true);
     try {
-      await pdfAPI.sendEmail(format, formData);
+      await pdfAPI.sendEmail(format, formData, layoutVersion);
       alert('Email sent successfully!');
     } catch (err) {
       setError(err.response?.data?.error || 'Failed to send email');
@@ -194,6 +196,18 @@ function LetterForm({ format }) {
         <div className="form-section">
           <h3>Letter Details</h3>
           <div className="form-row">
+            <div className="form-group">
+              <label>Layout Version *</label>
+              <select 
+                value={layoutVersion} 
+                onChange={(e) => setLayoutVersion(e.target.value)}
+                required
+              >
+                <option value="v1">Version 1 (Compact - Single Page)</option>
+                <option value="v2">Version 2 (QR on Page 2)</option>
+                <option value="v3">Version 3 (QR Top Right)</option>
+              </select>
+            </div>
             <div className="form-group">
               <label>Reference *</label>
               <input

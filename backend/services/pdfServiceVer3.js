@@ -54,13 +54,10 @@ const generateQRSection = (qrImagePath) => {
 
     console.log('✅ QR section generated successfully');
     return `
-    <div class="qr-instruction">
-      <p>For your convenience, you may <strong>settle payments instantly via the MauCAS QR Code (Scan to Pay)</strong> below using any mobile banking app such as Juice, MauBank WithMe, Blink, MyT Money, or other supported applications.</p>
-    </div>
-    <div class="qr-section">
-      ${maucasBase64 ? `<img src="${maucasBase64}" class="maucas-logo" alt="MauCAS Logo">` : ''}
-      <img src="${qrBase64}" class="qr-code" alt="QR Code">
-      ${zwennPayBase64 ? `<img src="${zwennPayBase64}" class="zwennpay-logo" alt="ZwennPay Logo">` : ''}
+    <div class="qr-section-topright">
+      ${maucasBase64 ? `<img src="${maucasBase64}" class="maucas-logo-small" alt="MauCAS Logo">` : ''}
+      <img src="${qrBase64}" class="qr-code-small" alt="QR Code">
+      ${zwennPayBase64 ? `<img src="${zwennPayBase64}" class="zwennpay-logo-small" alt="ZwennPay Logo">` : ''}
     </div>
     `;
   } catch (error) {
@@ -70,39 +67,43 @@ const generateQRSection = (qrImagePath) => {
 };
 
 const QR_SECTION_CSS = `
-    .qr-instruction {
-      margin: 8px 0 10px 0;
-    }
-    .qr-instruction p {
-      margin: 0;
-      font-size: 10pt;
-      line-height: 1.3;
-      color: #000;
-      font-weight: bold;
-      text-align: justify;
-    }
-    .qr-section {
+    .qr-section-topright {
+      position: absolute;
+      top: 80px;
+      right: 20px;
       text-align: center;
-      margin: 10px 0;
-      padding: 5px 0;
+      width: 140px;
+      padding: 8px;
+      background-color: #fff;
     }
-    .maucas-logo {
-      max-width: 120px;
+    .maucas-logo-small {
+      max-width: 90px;
       height: auto;
       display: block;
       margin: 0 auto 5px auto;
     }
-    .qr-code {
-      width: 105px;
-      height: 105px;
+    .qr-code-small {
+      width: 90px;
+      height: 90px;
       display: block;
       margin: 5px auto;
     }
-    .zwennpay-logo {
-      max-width: 80px;
+    .zwennpay-logo-small {
+      max-width: 65px;
       height: auto;
       display: block;
       margin: 5px auto 0 auto;
+    }
+    .qr-instruction-bottom {
+      margin: 8px 0 5px 0;
+    }
+    .qr-instruction-bottom p {
+      margin: 0;
+      font-size: 10pt;
+      line-height: 1.3;
+      color: #000;
+      font-weight: normal;
+      text-align: justify;
     }
 `;
 
@@ -131,6 +132,7 @@ const generateFormat1HTML = (data, qrImagePath) => {
       color: #000;
       margin: 0;
       padding: 10px 20px;
+      position: relative;
     }
     .header {
       text-align: center;
@@ -152,6 +154,7 @@ const generateFormat1HTML = (data, qrImagePath) => {
       font-weight: bold;
       margin-bottom: 12px;
       line-height: 1.2;
+      max-width: 55%;
     }
     .salutation {
       margin-bottom: 5px;
@@ -201,26 +204,28 @@ const generateFormat1HTML = (data, qrImagePath) => {
     }
     ${QR_SECTION_CSS}
     .footer {
-      margin-top: 20px;
+      margin-top: 12px;
     }
     .signature {
-      margin-top: 15px;
+      margin-top: 10px;
     }
     .signature-image {
-      max-width: 140px;
-      margin: 8px 0;
+      max-width: 112px;
+      margin: 5px 0;
     }
     .underline {
       text-decoration: underline;
     }
     .agreement {
-      margin-top: 20px;
+      margin-top: 12px;
       border-top: 1px solid #000;
-      padding-top: 8px;
+      padding-top: 5px;
     }
   </style>
 </head>
 <body>
+  ${qrSection}
+
   <div class="header">
     <img src="${logoBase64}" class="logo" alt="NIC Logo">
   </div>
@@ -243,8 +248,8 @@ const generateFormat1HTML = (data, qrImagePath) => {
 
   <table class="policy-grid">
     <tr>
-      <th>Proposal Number</th>
-      <th>Type of Plan</th>
+      <th>Policy No</th>
+      <th>Type of Policy</th>
       <th>Sum Assured</th>
       <th>Term</th>
       <th>Date of<br>commencement</th>
@@ -281,13 +286,9 @@ const generateFormat1HTML = (data, qrImagePath) => {
     </tr>
   </table>
 
-  ${qrSection}
-
-  <p class="intro-text">${data.closingText.replace('{returnDate}', data.returnDate)}</p>
+  <p class="intro-text" style="margin: 8px 0;">${data.closingText.replace('{returnDate}', data.returnDate)}</p>
 
   <div class="footer">
-    <p style="margin: 8px 0;">${data.assuringText}</p>
-    
     <div class="signature">
       <img src="${signatureBase64}" class="signature-image" alt="Signature">
       <div><strong>${data.signerName}</strong></div>
@@ -300,6 +301,11 @@ const generateFormat1HTML = (data, qrImagePath) => {
     <p style="margin: 5px 0 10px 0;">${data.agreementText}</p>
     <p style="margin: 5px 0;">Name: .................................................... Signature: .................................................... Date: ............................</p>
   </div>
+
+  <div class="qr-instruction-bottom">
+    <p>For your convenience, you may <strong>settle payments instantly via the MauCAS QR Code (Scan to Pay)</strong> at the top using any mobile banking app such as Juice, MauBank WithMe, Blink, MyT Money, or other supported applications.</p>
+  </div>
+
 </body>
 </html>
   `;
@@ -330,6 +336,7 @@ const generateFormat2HTML = (data, qrImagePath) => {
       color: #000;
       margin: 0;
       padding: 10px 20px;
+      position: relative;
     }
     .header {
       text-align: center;
@@ -351,6 +358,7 @@ const generateFormat2HTML = (data, qrImagePath) => {
       font-weight: bold;
       margin-bottom: 12px;
       line-height: 1.2;
+      max-width: 55%;
     }
     .salutation {
       margin-bottom: 5px;
@@ -400,26 +408,28 @@ const generateFormat2HTML = (data, qrImagePath) => {
     }
     ${QR_SECTION_CSS}
     .footer {
-      margin-top: 20px;
+      margin-top: 12px;
     }
     .signature {
-      margin-top: 15px;
+      margin-top: 10px;
     }
     .signature-image {
-      max-width: 140px;
-      margin: 8px 0;
+      max-width: 112px;
+      margin: 5px 0;
     }
     .underline {
       text-decoration: underline;
     }
     .agreement {
-      margin-top: 20px;
+      margin-top: 12px;
       border-top: 1px solid #000;
-      padding-top: 8px;
+      padding-top: 5px;
     }
   </style>
 </head>
 <body>
+  ${qrSection}
+
   <div class="header">
     <img src="${logoBase64}" class="logo" alt="NIC Logo">
   </div>
@@ -470,14 +480,10 @@ const generateFormat2HTML = (data, qrImagePath) => {
     </tr>
   </table>
 
-  ${qrSection}
-
-  <p class="intro-text">${data.closingText.replace('{returnDate}', data.returnDate)}</p>
+  <p class="intro-text" style="margin: 8px 0;">${data.closingText.replace('{returnDate}', data.returnDate)}</p>
 
   <div class="footer">
-    <p style="margin: 8px 0;">${data.assuringText}</p>
-    
-    <p style="margin: 8px 0;"><strong>Yours sincerely</strong></p>
+    <p style="margin: 5px 0;"><strong>Yours sincerely</strong></p>
     
     <div class="signature">
       <img src="${signatureBase64}" class="signature-image" alt="Signature">
@@ -488,9 +494,14 @@ const generateFormat2HTML = (data, qrImagePath) => {
   </div>
 
   <div class="agreement">
-    <p style="margin: 5px 0;">${data.agreementText}</p>
+    <p style="margin: 5px 0 10px 0;">${data.agreementText}</p>
     <p style="margin: 5px 0;">Name: .................................................... Signature: .................................................... Date: ............................</p>
   </div>
+
+  <div class="qr-instruction-bottom">
+    <p>For your convenience, you may <strong>settle payments instantly via the MauCAS QR Code (Scan to Pay)</strong> at the top using any mobile banking app such as Juice, MauBank WithMe, Blink, MyT Money, or other supported applications.</p>
+  </div>
+
 </body>
 </html>
   `;

@@ -54,6 +54,7 @@ const generateQRSection = (qrImagePath) => {
 
     console.log('✅ QR section generated successfully');
     return `
+    <div class="page-break"></div>
     <div class="qr-instruction">
       <p>For your convenience, you may <strong>settle payments instantly via the MauCAS QR Code (Scan to Pay)</strong> below using any mobile banking app such as Juice, MauBank WithMe, Blink, MyT Money, or other supported applications.</p>
     </div>
@@ -70,8 +71,11 @@ const generateQRSection = (qrImagePath) => {
 };
 
 const QR_SECTION_CSS = `
+    .page-break {
+      page-break-before: always;
+    }
     .qr-instruction {
-      margin: 8px 0 10px 0;
+      margin: 20px 0 15px 0;
     }
     .qr-instruction p {
       margin: 0;
@@ -83,26 +87,26 @@ const QR_SECTION_CSS = `
     }
     .qr-section {
       text-align: center;
-      margin: 10px 0;
-      padding: 5px 0;
+      margin: 20px 0;
+      padding: 10px 0;
     }
     .maucas-logo {
       max-width: 120px;
       height: auto;
       display: block;
-      margin: 0 auto 5px auto;
+      margin: 0 auto 10px auto;
     }
     .qr-code {
       width: 105px;
       height: 105px;
       display: block;
-      margin: 5px auto;
+      margin: 10px auto;
     }
     .zwennpay-logo {
       max-width: 80px;
       height: auto;
       display: block;
-      margin: 5px auto 0 auto;
+      margin: 10px auto 0 auto;
     }
 `;
 
@@ -243,8 +247,8 @@ const generateFormat1HTML = (data, qrImagePath) => {
 
   <table class="policy-grid">
     <tr>
-      <th>Proposal Number</th>
-      <th>Type of Plan</th>
+      <th>Policy No</th>
+      <th>Type of Policy</th>
       <th>Sum Assured</th>
       <th>Term</th>
       <th>Date of<br>commencement</th>
@@ -281,8 +285,6 @@ const generateFormat1HTML = (data, qrImagePath) => {
     </tr>
   </table>
 
-  ${qrSection}
-
   <p class="intro-text">${data.closingText.replace('{returnDate}', data.returnDate)}</p>
 
   <div class="footer">
@@ -300,6 +302,9 @@ const generateFormat1HTML = (data, qrImagePath) => {
     <p style="margin: 5px 0 10px 0;">${data.agreementText}</p>
     <p style="margin: 5px 0;">Name: .................................................... Signature: .................................................... Date: ............................</p>
   </div>
+
+  ${qrSection}
+
 </body>
 </html>
   `;
@@ -470,8 +475,6 @@ const generateFormat2HTML = (data, qrImagePath) => {
     </tr>
   </table>
 
-  ${qrSection}
-
   <p class="intro-text">${data.closingText.replace('{returnDate}', data.returnDate)}</p>
 
   <div class="footer">
@@ -488,9 +491,12 @@ const generateFormat2HTML = (data, qrImagePath) => {
   </div>
 
   <div class="agreement">
-    <p style="margin: 5px 0;">${data.agreementText}</p>
+    <p style="margin: 5px 0 10px 0;">${data.agreementText}</p>
     <p style="margin: 5px 0;">Name: .................................................... Signature: .................................................... Date: ............................</p>
   </div>
+
+  ${qrSection}
+
 </body>
 </html>
   `;
