@@ -64,7 +64,7 @@ function LetterForm({ format }) {
     }));
   }, []);
 
-  const [layoutVersion, setLayoutVersion] = useState('v1');
+  const [layoutVersion, setLayoutVersion] = useState(format === 'format1' ? 'v6' : 'v5');
 
   const [formData, setFormData] = useState({
     ref: 'BS',
@@ -84,6 +84,7 @@ function LetterForm({ format }) {
     benefits: '',
     monthlyPremium: '',
     revisedPremium: '',
+    extraPremium: '',
     remarks: '',
     option1: '',
     option2: '',
@@ -188,7 +189,7 @@ function LetterForm({ format }) {
 
   return (
     <div className="letter-form">
-      <h2>{format === 'format1' ? 'Life Insurance with Options' : 'Increase in Premium'}</h2>
+      <h2>{format === 'format1' ? 'Letter with Options' : 'Letter with no Options'}</h2>
       
       {error && <div className="error-message">{error}</div>}
 
@@ -203,9 +204,11 @@ function LetterForm({ format }) {
                 onChange={(e) => setLayoutVersion(e.target.value)}
                 required
               >
-                <option value="v1">Version 1 (Compact - Single Page)</option>
-                <option value="v2">Version 2 (QR on Page 2)</option>
-                <option value="v3">Version 3 (QR Top Right)</option>
+                {format === 'format1' ? (
+                  <option value="v6">Version 6 (Modern Format)</option>
+                ) : (
+                  <option value="v5">Version 5 (Standard Format)</option>
+                )}
               </select>
             </div>
             <div className="form-group">
@@ -371,17 +374,19 @@ function LetterForm({ format }) {
               />
             </div>
           )}
-          <div className="form-group">
-            <label>Benefits Covered *</label>
-            <textarea
-              name="benefits"
-              value={formData.benefits}
-              onChange={handleChange}
-              rows="3"
-              placeholder="Death Cover, Additional Death Benefit, Total and Permanent Disability Benefit..."
-              required
-            />
-          </div>
+          {format === 'format2' && (
+            <div className="form-group">
+              <label>Benefits Covered *</label>
+              <textarea
+                name="benefits"
+                value={formData.benefits}
+                onChange={handleChange}
+                rows="3"
+                placeholder="Death Cover, Additional Death Benefit, Total and Permanent Disability Benefit..."
+                required
+              />
+            </div>
+          )}
           {format === 'format1' ? (
             <div className="form-group">
               <label>Monthly Premium *</label>
@@ -407,38 +412,40 @@ function LetterForm({ format }) {
               />
             </div>
           )}
-          <div className="form-group">
-            <label>Remarks *</label>
-            <textarea
-              name="remarks"
-              value={formData.remarks}
-              onChange={handleChange}
-              rows="4"
-              placeholder="In view of hypertension, an extra premium..."
-              required
-            />
-          </div>
+          {format === 'format2' && (
+            <div className="form-group">
+              <label>Extra Premium *</label>
+              <input
+                type="text"
+                name="extraPremium"
+                value={formData.extraPremium}
+                onChange={handleChange}
+                placeholder="MUR 114.32 (Due to medical conditions)"
+                required
+              />
+            </div>
+          )}
           {format === 'format1' && (
             <>
               <div className="form-group">
-                <label>Option 1 *</label>
-                <textarea
+                <label>Revised Premium (Option 1) *</label>
+                <input
+                  type="text"
                   name="option1"
                   value={formData.option1}
                   onChange={handleChange}
-                  rows="2"
-                  placeholder="To keep the original sum assured..."
+                  placeholder="MUR [new amount]"
                   required
                 />
               </div>
               <div className="form-group">
-                <label>Option 2 *</label>
-                <textarea
+                <label>Adjusted Sum Assured (Option 2) *</label>
+                <input
+                  type="text"
                   name="option2"
                   value={formData.option2}
                   onChange={handleChange}
-                  rows="2"
-                  placeholder="To keep the original monthly premium..."
+                  placeholder="MUR [new amount]"
                   required
                 />
               </div>

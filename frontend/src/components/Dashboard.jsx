@@ -22,7 +22,7 @@ function Dashboard({ userEmail, onLogout }) {
             <h2>Select Letter Format</h2>
             <div className="format-cards">
               <div className="format-card" onClick={() => setSelectedFormat('format1')}>
-                <h3>Format 1</h3>
+                <h3>Letter with Options</h3>
                 <p>Life Insurance with Options</p>
                 <ul>
                   <li>Multiple benefits coverage</li>
@@ -32,7 +32,7 @@ function Dashboard({ userEmail, onLogout }) {
                 <button className="btn-primary">Select</button>
               </div>
               <div className="format-card" onClick={() => setSelectedFormat('format2')}>
-                <h3>Format 2</h3>
+                <h3>Letter with no Options</h3>
                 <p>Increase in Premium</p>
                 <ul>
                   <li>Simplified format</li>
