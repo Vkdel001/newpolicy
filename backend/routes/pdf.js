@@ -3,6 +3,9 @@ import jwt from 'jsonwebtoken';
 import { generatePDF as generatePDFV1 } from '../services/pdfService.js';
 import { generatePDF as generatePDFV2 } from '../services/pdfServiceVer2.js';
 import { generatePDF as generatePDFV3 } from '../services/pdfServiceVer3.js';
+import { generatePDF as generatePDFV4 } from '../services/pdfServiceVer4.js';
+import { generatePDF as generatePDFV5 } from '../services/pdfServiceVer5.js';
+import { generatePDF as generatePDFV6 } from '../services/pdfServiceVer6.js';
 import { sendLetterEmail } from '../services/brevoService.js';
 
 const router = express.Router();
@@ -54,6 +57,18 @@ router.post('/generate', authenticateToken, async (req, res) => {
         generatePDF = generatePDFV3;
         console.log('📄 Using Layout Version 3');
         break;
+      case 'v4':
+        generatePDF = generatePDFV4;
+        console.log('📄 Using Layout Version 4');
+        break;
+      case 'v5':
+        generatePDF = generatePDFV5;
+        console.log('📄 Using Layout Version 5');
+        break;
+      case 'v6':
+        generatePDF = generatePDFV6;
+        console.log('📄 Using Layout Version 6');
+        break;
       case 'v1':
       default:
         generatePDF = generatePDFV1;
@@ -96,6 +111,18 @@ router.post('/send-email', authenticateToken, async (req, res) => {
       case 'v3':
         generatePDF = generatePDFV3;
         console.log('📄 Using Layout Version 3 for email');
+        break;
+      case 'v4':
+        generatePDF = generatePDFV4;
+        console.log('📄 Using Layout Version 4 for email');
+        break;
+      case 'v5':
+        generatePDF = generatePDFV5;
+        console.log('📄 Using Layout Version 5 for email');
+        break;
+      case 'v6':
+        generatePDF = generatePDFV6;
+        console.log('📄 Using Layout Version 6 for email');
         break;
       case 'v1':
       default:
