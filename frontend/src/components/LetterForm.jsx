@@ -77,7 +77,7 @@ function LetterForm({ format }) {
     address3: '',
     policyNo: '',
     applicationDate: '',
-    policyType: format === 'format1' ? 'NIC Prosperity Plan' : 'Increase in Premium',
+    policyType: format === 'format1' ? 'NIC Prosperity Plan' : '',
     sumAssured: '',
     term: '',
     commencementDate: '',
@@ -334,6 +334,7 @@ function LetterForm({ format }) {
               name="policyType"
               value={formData.policyType}
               onChange={handleChange}
+              placeholder="type of policy"
               required
             />
           </div>
