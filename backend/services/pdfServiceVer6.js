@@ -101,8 +101,8 @@ const generateFormat1HTML = (data, qrImagePath) => {
   const signatureBase64 = getBase64Image(data.signatureFile || 'signature1.png');
   const qrSection = generateQRSection(qrImagePath);
   const ccLine = data.advisorName && data.advisorName.trim()
-    ? `cc: ${data.advisorName}`
-    : '';
+    ? `C.C Your Insurance Advisor, ${data.advisorName}, NIC Team`
+    : 'C.C Your Insurance Advisor, NIC Team';
 
   return `
 <!DOCTYPE html>
@@ -247,7 +247,7 @@ const generateFormat1HTML = (data, qrImagePath) => {
 
   <div class="subject">Subject: Proposal for Life Insurance - Policy No. ${data.policyNo}</div>
 
-  <p class="intro-text">Following the underwriting assessment of your life insurance application dated, we are pleased to inform you that your proposal has been accepted with revised terms, as outlined below:</p>
+  <p class="intro-text">Following the underwriting assessment of your life insurance application dated ${data.applicationDate || '[application date]'}, we are pleased to inform you that your proposal has been accepted with revised terms, as outlined below:</p>
 
   <table class="policy-summary">
     <tr>
@@ -299,7 +299,7 @@ const generateFormat1HTML = (data, qrImagePath) => {
       <img src="${signatureBase64}" class="signature-image" alt="Signature">
       <div><strong>${data.signerName}</strong></div>
       <div>${data.signerTitle}</div>
-      ${ccLine ? `<div>${ccLine}</div>` : ''}
+      <div><em>${ccLine}</em></div>
     </div>
   </div>
 

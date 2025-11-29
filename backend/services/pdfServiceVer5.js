@@ -244,7 +244,7 @@ const generateFormat1HTML = (data, qrImagePath) => {
 
   <div class="subject">RE: PROPOSAL FOR LIFE INSURANCE: PN ${data.policyNo}</div>
 
-  <p class="intro-text">Please refer to your application for life assurance. We wish to inform you that your life <u>cover</u> has been accepted as per details set below:</p>
+  <p class="intro-text">Please refer to your application for life assurance. We wish to inform you that your life cover has been accepted as per details set below:</p>
 
   <table>
     <tr>
@@ -441,7 +441,7 @@ const generateFormat2HTML = (data, qrImagePath) => {
 
   <div class="subject">RE: PROPOSAL FOR LIFE INSURANCE: PN ${data.policyNo}</div>
 
-  <p class="intro-text">Please refer to your application for life assurance. We wish to inform you that your life <u>cover</u> has been accepted as per details set below:</p>
+  <p class="intro-text">Please refer to your application for life assurance. We wish to inform you that your life cover has been accepted as per details set below:</p>
 
   <table>
     <tr>
